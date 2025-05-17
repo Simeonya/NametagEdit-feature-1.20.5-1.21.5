@@ -1,0 +1,83 @@
+== Configuration
+Three configurable files will be generated if they do not exist. They are: "config.yml", "groups.yml" and "players.yml".
+
+=== config.yml
+
+| Option  | Value(s)  | Description |
+| ClearEmptyTeamsInterval | Integer | This feature clears empty teams left behind by other plugins (might fix lag!). This setting is expressed as an interval in seconds. |
+| DatabaseVersion | Integer | Do NOT change this setting! |
+| Debug | true/false | If enabled, NametagEdit will print out debug information to the console. |
+| DisablePush  | true/false | If 'true', NametagEdit will prevent player pushing. This only works if both players have NametagEdit nametags. |
+| MetricsEnabled  | true/false | If 'true', small amounts of data will be sent to MCstats.org so we can keep track of the plugin's popularity. |
+| MySQL | true/false | If 'true', NametagEdit will use MySQL to store group/player data |
+| RefreshTagOnWorldChange | true/false | If enabled, NametagEdit will refresh a player's nametag when they change worlds. |
+| RefreshInterval | Integer | This feature will refresh all player's nametags on an interval expressed in seconds. |
+| Tablist.Enabled | true/false | If enabled, NametagEdit will alter a user's name in the tab. |
+| Tablist.LongTags | true/false | If enabled, NametagEdit will format the user's PlayerListName for longer nametags. |
+
+=== groups.yml
+Place your HIGHEST permission group at the top. At the top of the file there should be a group like "Owner" while the bottom should have something similar to "Default".
+
+{{{
+Groups:
+  Owner: # This is the 'key' or the name to distinguish this group
+     Permission: nte.owner # This is the permission required to have this nametag. You can change this to whatever.
+     Prefix: '&2' # Both Prefix/Suffix are REQUIRED, even if they are blank. String length will be automatically trimmed 
+     Suffix: '&f'
+     SortPriority: 1
+}}}
+
+=== players.yml
+
+{{{
+Players:
+  b5ccebaa-0623-4370-af73-0ec985dfa3b0: # This is the 'key' to identify the players
+     Name: sgtcazeyt # This is the friendly name of the player
+     Prefix: '&b' # Both Prefix/Suffix are REQUIRED, even if they are blank. String length will be automatically trimmed
+     Suffix: '&c'
+     SortPriority: 1
+}}}
+
+== Sorting Nametags
+
+Server owners might want to arrange the tab list so nametags follow a certain order. You can accomplish this for both Groups & Players:
+{{{
+SortPriority: 1
+}}}
+
+SortPriority represents the position in TAB. If you set this to "1" you're saying, "Display this first". If you set it to "2", you're saying, "Display this second" -- and so on and so forth.
+
+Suppose you have 2 ranks:
+{{{
+Groups:
+  Admin:
+    Permission: nte.admin
+    Prefix: '&c'
+    Suffix: '&f'
+  Moderator:
+    Permission: nte.moderator
+    Prefix: '&2'
+    Suffix: '&f'
+}}}
+
+And you want to display Admin first. You might do something like:
+{{{
+Groups:
+  Admin:
+    Permission: nte.admin
+    Prefix: '&c'
+    Suffix: '&f'
+    SortPriority: 1 # 1 means it will display first
+  Moderator:
+    Permission: nte.moderator
+    Prefix: '&2'
+    Suffix: '&f'
+    SortPriority: 2 # Means this will display second
+}}}
+
+To make the Moderator tag display first, we would simply reverse the Sort Priority. If there is no Sort Priority defined, then tags will randomly format in the tab. 
+Scoreboard Team names are limited to 16 characters each. You can have several hundred distinct Sort Priorities without issues.
+
+=== Players and Groups conflict
+The sort priority MUST be UNIQUE to be used properly. For example, if you have SortPriority: 1 in both your Groups/Players files, then nametags will not be guaranteed to arrange properly. For example, if we have a rank
+such as "Server Owner", we could set the SortPriority to 1, and then below that an "Admin" groups can have a SortPriority of 2. The same is true for if a player shares the same Sort Priority as a group.
